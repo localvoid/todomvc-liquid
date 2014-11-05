@@ -1,0 +1,7 @@
+name: todomvc_liquid
+description: TodoMVC example
+dependencies:
+  browser: any
+  route_hierarchical: any
+  vdom: '>=0.4.0+1'
+  liquid: '>=0.0.1'
