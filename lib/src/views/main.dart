@@ -21,17 +21,19 @@ class Main extends VComponent {
     // in build() method. So it is just a matter of preference
     element.id = 'main';
 
-    // Registering event callbacks
-    element
-        ..onKeyDown.matches('.edit').listen(_editKeyDown)
-        ..onInput.matches('.edit').listen(_editInput)
-        ..onDoubleClick.matches('label').listen(_labelDoubleClick)
-        ..onClick.matches('.destroy').listen(_destroyClick)
-        ..onBlur.capture(_handleBlur); // blur doesn't propagate
+    Zone.ROOT.run(() {
+      // Registering event callbacks
+      element
+          ..onKeyDown.matches('.edit').listen(_editKeyDown)
+          ..onInput.matches('.edit').listen(_editInput)
+          ..onDoubleClick.matches('label').listen(_labelDoubleClick)
+          ..onClick.matches('.destroy').listen(_destroyClick)
+          ..onBlur.capture(_handleBlur); // blur doesn't propagate
 
-    element.onChange
-        ..matches('.toggle').listen(_toggleItem)
-        ..matches('#toggle-all').listen(_toggleAll);
+      element.onChange
+          ..matches('.toggle').listen(_toggleItem)
+          ..matches('#toggle-all').listen(_toggleAll);
+    });
   }
 
   /// Find key value from one of its children elements

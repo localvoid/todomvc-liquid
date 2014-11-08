@@ -10,9 +10,12 @@ class Header extends VComponent {
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Header(ComponentBase parent, this._model)
       : super('header', parent) {
-    element
-        ..onInput.matches('#new-todo').listen(_handleInput)
-        ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
+
+    Zone.ROOT.run(() {
+      element
+         ..onInput.matches('#new-todo').listen(_handleInput)
+         ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
+    });
   }
 
   void _handleKeyDown(KeyboardEvent e) {

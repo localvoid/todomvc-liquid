@@ -29,7 +29,9 @@ class TodoApp extends VComponent {
     /// Whenever something is changed, and we aren't in the UpdateLoop:write
     /// phase we don't update view immediately, we are just marking it as
     /// dirty with `invalidate()` method.
-    _model.changes.listen((_) => invalidate());
+    Zone.ROOT.run(() {
+      _model.changes.listen((_) => invalidate());
+    });
   }
 
   /// Here we are building virtual DOM, nothing interesting here.
