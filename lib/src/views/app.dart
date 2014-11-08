@@ -58,13 +58,13 @@ class TodoApp extends VComponent {
 
     final completedCount = _model.items.length - activeCount;
 
-    final children = [Header.virtual(0, this, _model)];
+    final children = [Header.virtual(0, _model)];
 
     if (shownTodos.isNotEmpty) {
-      children.add(Main.virtual(1, this, shownTodos, activeCount, _model));
+      children.add(Main.virtual(1, shownTodos, activeCount, _model));
     }
     if (activeCount > 0 || completedCount > 0) {
-      children.add(Footer.virtual(2, this,
+      children.add(Footer.virtual(2,
                                   activeCount,
                                   completedCount,
                                   _model.showItems,

@@ -64,7 +64,7 @@ class TodoItemView extends VComponent {
 
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
-    final checkBox = CheckBoxComponent.virtual(#toggleButton, this,
+    final checkBox = CheckBoxComponent.virtual(#toggleButton,
         checked: _isCompleted,
         attributes: const {'class': 'toggle'});
 
@@ -79,7 +79,7 @@ class TodoItemView extends VComponent {
       // Here we are using Component that supports passing VRefs to virtual
       // constructors, so it will assign real dom element to it when it is
       // constructed.
-      final input = TextInputComponent.virtual(#input, this,
+      final input = TextInputComponent.virtual(#input,
           attributes: const {'class': 'edit'},
           value: _editingTitle,
           ref: _editField);
@@ -111,11 +111,10 @@ class TodoItemView extends VComponent {
 
   /// virtual static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, ComponentBase parent,
-                               TodoItem item) {
-    return new VDomComponent(key, (component) {
+  static VDomComponent virtual(Object key, TodoItem item) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new TodoItemView(parent, item);
+        return new TodoItemView(context, item);
       }
       component.updateProperties(item);
     });

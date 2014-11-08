@@ -40,7 +40,7 @@ class Header extends VComponent {
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
     return vdom.header(0, [vdom.h1(0, [vdom.t('todos')]),
-            TextInputComponent.virtual(1, this,
+            TextInputComponent.virtual(1,
               value: _input,
               attributes: const {
               'id': 'new-todo',
@@ -51,11 +51,10 @@ class Header extends VComponent {
 
   /// virtual static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, ComponentBase parent,
-                               TodoModel model) {
-    return new VDomComponent(key, (component) {
+  static VDomComponent virtual(Object key, TodoModel model) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new Header(parent, model);
+        return new Header(context, model);
       }
     });
   }

@@ -119,11 +119,11 @@ class Main extends VComponent {
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
     final activeTodoCount = 0;
-    final checkBox = CheckBoxComponent.virtual(0, this,
+    final checkBox = CheckBoxComponent.virtual(0,
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
-    final todoList = shownTodos.map((i) => TodoItemView.virtual(i.id, this, i)).toList();
+    final todoList = shownTodos.map((i) => TodoItemView.virtual(i.id, i)).toList();
     final todoListContainer = vdom.ul(1, todoList, attributes: const {'id': 'todo-list'});
 
     return vdom.section(0, [checkBox, todoListContainer]);
@@ -169,12 +169,12 @@ class Main extends VComponent {
   ///
   /// Callback will be always executed in UpdateLoop:write phase, so we can
   /// call `update()` method instead of `invalidate()`.
-  static VDomComponent virtual(Object key, ComponentBase parent,
+  static VDomComponent virtual(Object key,
                                List<TodoItem> shownTodos, int activeCount,
                                TodoModel model) {
-    return new VDomComponent(key, (component) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new Main(parent, shownTodos, activeCount, model);
+        return new Main(context, shownTodos, activeCount, model);
       }
       component.updateProperties(shownTodos, activeCount);
     });
