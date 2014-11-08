@@ -5,3 +5,8 @@ dependencies:
   route_hierarchical: any
   vdom: '>=0.4.0+1'
   liquid: '>=0.0.1'
+dependency_overrides:
+  vdom:
+    path: ../vdom
+  liquid:
+    path: ../liquid

@@ -16,7 +16,7 @@ class Main extends VComponent {
   TodoModel _model;
 
   Main(ComponentBase parent, this.shownTodos, this.activeCount, this._model)
-      : super(parent, new Element.tag('section')) {
+      : super('section', parent) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';

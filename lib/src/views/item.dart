@@ -31,8 +31,8 @@ class TodoItemView extends VComponent {
   TodoItemView(ComponentBase parent, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
-        super(parent, new LIElement(), key: item.id) {
-    element.dataset['key'] = item.id.toString();
+        super('li', parent, key: item.id) {
+    element.dataset['key'] = key.toString();
   }
 
   /// Action that changes state, it can be called in any time,
@@ -44,7 +44,7 @@ class TodoItemView extends VComponent {
     // Here is a special case when we need to perform some action
     // after view is rendered. It will be called immediately after
     // read/write phases in UpdateLoop.
-    UpdateLoop.after(() {
+    Scheduler.after().then((_) {
       if (isAttached) {
         InputElement e = _editField.get.element;
         final length = _title.length;

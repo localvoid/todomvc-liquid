@@ -16,7 +16,7 @@ class Footer extends VComponent {
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Footer(ComponentBase parent, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
-      : super(parent, new Element.tag('footer')) {
+      : super('footer', parent) {
     element.id = 'footer';
 
     //Event listener to clear button using Event delegation

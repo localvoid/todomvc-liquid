@@ -11,18 +11,19 @@ class TodoApp extends VComponent {
   TodoModel _model;
 
   /// Whenever we create our components, it is necessary to pass
-  /// reference to the parent Component and HtmlElement to super constructor,
-  /// and it isn't optional.
-  /// I'll try to explain why it is this way when I start documenting Liquid
-  /// library.
+  /// reference to the parent Component.
   ///
   /// It is also quite important to understand our UpdateLoop, for example
   /// Component constructors are always executed in UpdateLoop:write phase,
   /// so we can do any DOM operations here, there is nothing wrong with this.
   /// Except for DOM read operations, reading properly isn't an easy task.
   /// UpdateLoop supports read/write batching.
-  TodoApp(ComponentBase parent, this._model)
-      : super(parent, new DivElement()) {
+  TodoApp(ComponentBase parent, this._model) : super('div', parent);
+
+  /// When Component is attached to the DOM, we start listening to the events
+  /// from data model.
+  void attached() {
+    super.attached();
     /// Listen to changes from our Data model
     ///
     /// Whenever something is changed, and we aren't in the UpdateLoop:write

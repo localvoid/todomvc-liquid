@@ -109,7 +109,9 @@ class TodoModel {
     if (_changesController.hasListener) {
       if (!_notifying) {
         _notifying = true;
-        scheduleMicrotask(_notifyFinish);
+        Zone.ROOT.run(() {
+          scheduleMicrotask(_notifyFinish);
+        });
       }
     }
   }
