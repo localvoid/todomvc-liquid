@@ -14,9 +14,10 @@ class Main extends VComponent {
   List<TodoItem> shownTodos;
   int activeCount;
   TodoModel _model;
+  List<VDomComponent> _todoItems;
 
-  Main(ComponentBase parent, this.shownTodos, this.activeCount, this._model)
-      : super('section', parent) {
+  Main(Object key, ComponentBase parent, this.shownTodos, this.activeCount, this._model)
+      : super(key, 'section', parent) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';
@@ -34,6 +35,10 @@ class Main extends VComponent {
           ..matches('.toggle').listen(_toggleItem)
           ..matches('#toggle-all').listen(_toggleAll);
     });
+  }
+
+  TodoItemView findByKey(Object key) {
+    return _todoItems.firstWhere((i) => i.key == key).component;
   }
 
   /// Find key value from one of its children elements
@@ -119,12 +124,13 @@ class Main extends VComponent {
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
     final activeTodoCount = 0;
-    final checkBox = CheckBoxComponent.virtual(0,
+    final checkBox = new CheckBox(0,
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
-    final todoList = shownTodos.map((i) => TodoItemView.virtual(i.id, i)).toList();
-    final todoListContainer = vdom.ul(1, todoList, attributes: const {'id': 'todo-list'});
+    _todoItems = shownTodos.map((i) => component(i.id, TodoItemView.init(i))).toList();
+    final todoListContainer = vdom.ul(1, _todoItems,
+        attributes: const {'id': 'todo-list'});
 
     return vdom.section(0, [checkBox, todoListContainer]);
   }
@@ -169,14 +175,12 @@ class Main extends VComponent {
   ///
   /// Callback will be always executed in UpdateLoop:write phase, so we can
   /// call `update()` method instead of `invalidate()`.
-  static VDomComponent virtual(Object key,
-                               List<TodoItem> shownTodos, int activeCount,
-                               TodoModel model) {
-    return new VDomComponent(key, (component, context) {
+  static init(List<TodoItem> shownTodos, int activeCount, TodoModel model) {
+    return (component, key, context) {
       if (component == null) {
-        return new Main(context, shownTodos, activeCount, model);
+        return new Main(key, context, shownTodos, activeCount, model);
       }
       component.updateProperties(shownTodos, activeCount);
-    });
+    };
   }
 }

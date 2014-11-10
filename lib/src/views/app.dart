@@ -18,7 +18,7 @@ class TodoApp extends VComponent {
   /// so we can do any DOM operations here, there is nothing wrong with this.
   /// Except for DOM read operations, reading properly isn't an easy task.
   /// UpdateLoop supports read/write batching.
-  TodoApp(ComponentBase parent, this._model) : super('div', parent);
+  TodoApp(Object key, ComponentBase parent, this._model) : super(key, 'div', parent);
 
   /// When Component is attached to the DOM, we start listening to the events
   /// from data model.
@@ -58,17 +58,16 @@ class TodoApp extends VComponent {
 
     final completedCount = _model.items.length - activeCount;
 
-    final children = [Header.virtual(0, _model)];
+    final children = [component(0, Header.init(_model))];
 
     if (shownTodos.isNotEmpty) {
-      children.add(Main.virtual(1, shownTodos, activeCount, _model));
+      children.add(component(1, Main.init(shownTodos, activeCount, _model)));
     }
     if (activeCount > 0 || completedCount > 0) {
-      children.add(Footer.virtual(2,
-                                  activeCount,
-                                  completedCount,
-                                  _model.showItems,
-                                  _clearCompleted));
+      children.add(component(2, Footer.init(activeCount,
+                                            completedCount,
+                                            _model.showItems,
+                                            _clearCompleted)));
     }
 
     return vdom.div(0, children);

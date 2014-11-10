@@ -8,8 +8,8 @@ class Header extends VComponent {
   String _input = '';
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Header(ComponentBase parent, this._model)
-      : super('header', parent) {
+  Header(Object key, ComponentBase parent, this._model)
+      : super(key, 'header', parent) {
 
     Zone.ROOT.run(() {
       element
@@ -40,7 +40,7 @@ class Header extends VComponent {
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
     return vdom.header(0, [vdom.h1(0, [vdom.t('todos')]),
-            TextInputComponent.virtual(1,
+            new TextInput(1,
               value: _input,
               attributes: const {
               'id': 'new-todo',
@@ -51,11 +51,11 @@ class Header extends VComponent {
 
   /// virtual static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, TodoModel model) {
-    return new VDomComponent(key, (component, context) {
+  static init(TodoModel model) {
+    return (component, key, context) {
       if (component == null) {
-        return new Header(context, model);
+        return new Header(key, context, model);
       }
-    });
+    };
   }
 }

@@ -22,22 +22,6 @@ void main() {
   final model = new TodoModel(); // "lib/src/model.dart"
   initRouter(model);
 
-  /// All Components should be children of other Components.
-  /// So here are some special Component that can live without any
-  /// parents.
-  ///
-  /// It is always mounted on top of existing HtmlElement. You can mount
-  /// any number of root components as you wish.
-  final root = new RootComponent.mount(querySelector('#todoapp'));
-
-  /// And now we create our top-level App Component and append it to the
-  /// Root Component.
-  ///
-  /// There is a simple convention that the first parameter is a reference
-  /// to the parent Component.
-  ///
-  /// But you are free to choose whatever you want. It is always possible to
-  /// create factories, that will automaticaly inject parents.
-  final app = new TodoApp(root, model); // "lib/src/views/app.dart"
-  root.append(app);
+  final app = new TodoApp(0, Component.ROOT, model); // "lib/src/views/app.dart"
+  injectComponent(app, querySelector('#todoapp'));
 }

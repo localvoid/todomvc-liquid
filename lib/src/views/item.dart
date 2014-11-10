@@ -6,13 +6,11 @@ part of todomvc;
 ///
 /// It is an example of stateful Component.
 class TodoItemView extends VComponent {
-  /// Sometimes it useful to access raw DOM, here we are using it
-  /// to set focus on it.
-  VRef _editField = new VRef<TextInputComponent>();
-
   // properties
   String _title;
   bool _isCompleted;
+
+  TextInput _input;
 
   // state
   bool _isEditing = false;
@@ -28,10 +26,10 @@ class TodoItemView extends VComponent {
   }
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(ComponentBase parent, TodoItem item)
+  TodoItemView(Object key, ComponentBase parent, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
-        super('li', parent, key: item.id) {
+        super(key, 'li', parent) {
     element.dataset['key'] = key.toString();
   }
 
@@ -46,7 +44,7 @@ class TodoItemView extends VComponent {
     // read/write phases in UpdateLoop.
     Scheduler.after().then((_) {
       if (isAttached) {
-        InputElement e = _editField.get.element;
+        final InputElement e = _input.ref;
         final length = _title.length;
         e.focus();
         e.setSelectionRange(length, length);
@@ -64,7 +62,7 @@ class TodoItemView extends VComponent {
 
   /// build method explanation in "lib/src/views/app.dart" file.
   v.Element build() {
-    final checkBox = CheckBoxComponent.virtual(#toggleButton,
+    final checkBox = new CheckBox(#toggleButton,
         checked: _isCompleted,
         attributes: const {'class': 'toggle'});
 
@@ -79,12 +77,11 @@ class TodoItemView extends VComponent {
       // Here we are using Component that supports passing VRefs to virtual
       // constructors, so it will assign real dom element to it when it is
       // constructed.
-      final input = TextInputComponent.virtual(#input,
+      _input = new TextInput(#input,
           attributes: const {'class': 'edit'},
-          value: _editingTitle,
-          ref: _editField);
+          value: _editingTitle);
 
-      children = [view, input];
+      children = [view, _input];
     } else {
       children = [view];
     }
@@ -109,14 +106,14 @@ class TodoItemView extends VComponent {
     update();
   }
 
-  /// virtual static function convention explanation in
+  /// init static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, TodoItem item) {
-    return new VDomComponent(key, (component, context) {
+  static init(TodoItem item) {
+    return (component, key, context) {
       if (component == null) {
-        return new TodoItemView(context, item);
+        return new TodoItemView(key, context, item);
       }
       component.updateProperties(item);
-    });
+    };
   }
 }
