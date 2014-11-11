@@ -16,7 +16,7 @@ class Main extends VComponent {
   TodoModel _model;
   List<VDomComponent> _todoItems;
 
-  Main(Object key, ComponentBase parent, this.shownTodos, this.activeCount, this._model)
+  Main(Object key, Component parent, this.shownTodos, this.activeCount, this._model)
       : super(key, 'section', parent) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference

@@ -8,7 +8,7 @@ class Header extends VComponent {
   String _input = '';
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Header(Object key, ComponentBase parent, this._model)
+  Header(Object key, Component parent, this._model)
       : super(key, 'header', parent) {
 
     Zone.ROOT.run(() {

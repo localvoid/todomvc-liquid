@@ -14,7 +14,7 @@ class Footer extends VComponent {
   Function clearCompleted;
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Footer(Object key, ComponentBase parent, this.activeCount, this.completedCount,
+  Footer(Object key, Component parent, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
       : super(key, 'footer', parent) {
     element.id = 'footer';

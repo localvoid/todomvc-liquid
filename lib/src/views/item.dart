@@ -26,7 +26,7 @@ class TodoItemView extends VComponent {
   }
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(Object key, ComponentBase parent, TodoItem item)
+  TodoItemView(Object key, Component parent, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
         super(key, 'li', parent) {
@@ -42,7 +42,7 @@ class TodoItemView extends VComponent {
     // Here is a special case when we need to perform some action
     // after view is rendered. It will be called immediately after
     // read/write phases in UpdateLoop.
-    Scheduler.after().then((_) {
+    Scheduler.currentFrame.after().then((_) {
       if (isAttached) {
         final InputElement e = _input.ref;
         final length = _title.length;

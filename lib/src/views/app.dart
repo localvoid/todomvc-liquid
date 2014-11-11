@@ -18,7 +18,7 @@ class TodoApp extends VComponent {
   /// so we can do any DOM operations here, there is nothing wrong with this.
   /// Except for DOM read operations, reading properly isn't an easy task.
   /// UpdateLoop supports read/write batching.
-  TodoApp(Object key, ComponentBase parent, this._model) : super(key, 'div', parent);
+  TodoApp(Object key, Component parent, this._model) : super(key, 'div', parent);
 
   /// When Component is attached to the DOM, we start listening to the events
   /// from data model.
