@@ -8,8 +8,8 @@ class Header extends VComponent {
   String _input = '';
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Header(Object key, Component parent, this._model)
-      : super(key, 'header', parent) {
+  Header(Object key, Context context, this._model)
+      : super(key, 'header', context) {
 
     Zone.ROOT.run(() {
       element
@@ -51,11 +51,11 @@ class Header extends VComponent {
 
   /// virtual static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static init(TodoModel model) {
-    return (component, key, context) {
+  static VDomComponent virtual(Object key, TodoModel model) {
+    return new VDomComponent(key, (component, key, context) {
       if (component == null) {
         return new Header(key, context, model);
       }
-    };
+    });
   }
 }

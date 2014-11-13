@@ -10,25 +10,33 @@ part of todomvc;
 class TodoApp extends VComponent {
   TodoModel _model;
 
-  /// Whenever we create our components, it is necessary to pass
-  /// reference to the parent Component.
+  /// Whenever we create our Components, we need to pass unique [key] and
+  /// [context] in which this [Component] is created. [context] is used to
+  /// determine its depth relative to other contexts.
   ///
-  /// It is also quite important to understand our UpdateLoop, for example
-  /// Component constructors are always executed in UpdateLoop:write phase,
-  /// so we can do any DOM operations here, there is nothing wrong with this.
-  /// Except for DOM read operations, reading properly isn't an easy task.
-  /// UpdateLoop supports read/write batching.
-  TodoApp(Object key, Component parent, this._model) : super(key, 'div', parent);
+  /// Depth is used in our Scheduler to sort write tasks, so that Components
+  /// with the lowest depth have higher priority.
+  ///
+  /// It is important to understand how Scheduler works, for example
+  /// Component constructors are always executed in Scheduler:write phase,
+  /// so we can do any DOM write operations here, there is nothing wrong with
+  /// this. Except for DOM read operations, to read from the DOM, we need to
+  /// use `readDOM()` method that returns Future, and this Future will be
+  /// completed when Scheduler:read phase starts.
+  TodoApp(Object key, Context context, this._model) : super(key, 'div', context);
 
-  /// When Component is attached to the DOM, we start listening to the events
-  /// from data model.
+  /// This method is invoked when Component is attached to the DOM, so we can start
+  /// to listening for the events from data model.
   void attached() {
     super.attached();
     /// Listen to changes from our Data model
     ///
-    /// Whenever something is changed, and we aren't in the UpdateLoop:write
-    /// phase we don't update view immediately, we are just marking it as
-    /// dirty with `invalidate()` method.
+    /// `attached` method is executed in the Scheduler zone, so if we want to
+    /// execute something outside of the Scheduler zone, like in this example,
+    /// we need to run it in different zone, for example in the ROOT zone.
+    ///
+    /// In this case, when model is changed, we are invalidating this component,
+    /// and on the next frame Scheduler will update this Component.
     Zone.ROOT.run(() {
       _model.changes.listen((_) => invalidate());
     });
@@ -37,9 +45,12 @@ class TodoApp extends VComponent {
   /// Here we are building virtual DOM, nothing interesting here.
   ///
   /// But it is also important to remember that it is always executed in
-  /// UpdateLoop:write phase. So when we create other Components and passing
+  /// Scheduler:write phase. So when we create other Components and passing
   /// properties in "Data-Flow" style, we can update this Components
   /// immediately, instead of calling `invalidate()`.
+  ///
+  /// Most of the time this isn't important, but it is quite important to know
+  /// when you start writing low-level Components.
   v.Element build() {
     final shownTodos = _model.items.where((i) {
       switch (_model.showItems) {
@@ -58,16 +69,17 @@ class TodoApp extends VComponent {
 
     final completedCount = _model.items.length - activeCount;
 
-    final children = [component(0, Header.init(_model))];
+    final children = [Header.virtual(#header, _model)];
 
     if (shownTodos.isNotEmpty) {
-      children.add(component(1, Main.init(shownTodos, activeCount, _model)));
+      children.add(Main.virtual(#main, shownTodos, activeCount, _model));
     }
     if (activeCount > 0 || completedCount > 0) {
-      children.add(component(2, Footer.init(activeCount,
-                                            completedCount,
-                                            _model.showItems,
-                                            _clearCompleted)));
+      children.add(Footer.virtual(#footer,
+                                  activeCount,
+                                  completedCount,
+                                  _model.showItems,
+                                  _clearCompleted));
     }
 
     return vdom.div(0, children);

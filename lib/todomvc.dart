@@ -5,7 +5,7 @@ import 'dart:html';
 import 'package:vdom/vdom.dart' as v;
 import 'package:vdom/helpers.dart' as vdom;
 import 'package:liquid/liquid.dart';
-import 'package:liquid/components.dart';
+import 'package:liquid/forms.dart';
 
 part 'package:todomvc_liquid/src/utils.dart';
 part 'package:todomvc_liquid/src/model.dart';

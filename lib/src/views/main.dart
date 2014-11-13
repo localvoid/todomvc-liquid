@@ -4,20 +4,17 @@ part of todomvc;
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
 ///
-/// This Component is using Event delegation as it should be done, and
-/// not like all this global HashMap nonsense (really, what is the point?
-/// slow DOM operations in old browsers?)
-///
-/// And just to demonstrate that Components can be stateful, we will update
-/// children Components state from our event callbacks.
+/// This application is for demonstration purposes, so it isn't written in
+/// a best possible way, like for example in this case I want to demonstrate
+/// how to access children Components from the parent.
 class Main extends VComponent {
   List<TodoItem> shownTodos;
   int activeCount;
   TodoModel _model;
   List<VDomComponent> _todoItems;
 
-  Main(Object key, Component parent, this.shownTodos, this.activeCount, this._model)
-      : super(key, 'section', parent) {
+  Main(Object key, Context context, this.shownTodos, this.activeCount, this._model)
+      : super(key, 'section', context) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';
@@ -128,7 +125,7 @@ class Main extends VComponent {
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
-    _todoItems = shownTodos.map((i) => component(i.id, TodoItemView.init(i))).toList();
+    _todoItems = shownTodos.map((i) => TodoItemView.virtual(i.id, i)).toList();
     final todoListContainer = vdom.ul(1, _todoItems,
         attributes: const {'id': 'todo-list'});
 
@@ -139,7 +136,7 @@ class Main extends VComponent {
   ///
   /// It is not necessary to create such method, it is just a convention.
   ///
-  /// This method should be called only from UpdateLoop:write phase, so we
+  /// This method should be called only from Scheduler:write phase, so we
   /// can check if properties are changed and update view if necessary.
   void updateProperties(List<TodoItem> newShownTodos, int newActiveCount) {
     shownTodos = newShownTodos;
@@ -161,26 +158,27 @@ class Main extends VComponent {
   /// The key idea here is a callback that is passed to the new [VDomComponent]
   /// object.
   ///
-  /// The callback function have just one argument, it is the real [Component]
-  /// object.
+  /// The callback function have three arguments, it is [Component] object,
+  /// unique key and parent context.
   ///
-  /// When this argument is null, callback function should create a new
+  /// When [component] argument is null, callback function should create a new
   /// [Component] and return it.
-  /// If it isn't null, it means that [Component] is transfered from the old
+  /// If it isn't null, it means that [Component] is moved from the old
   /// VDom tree to the new one, and it will be passed as an argument to the
   /// callback.
   ///
-  /// So if we want to support data-flow model, we can just update our
-  /// properties when component argument isn't null.
+  /// So we can just update properties if they're changed and update Component.
   ///
-  /// Callback will be always executed in UpdateLoop:write phase, so we can
-  /// call `update()` method instead of `invalidate()`.
-  static init(List<TodoItem> shownTodos, int activeCount, TodoModel model) {
-    return (component, key, context) {
+  /// Callback will be always executed in Scheduler:write phase.
+  static VDomComponent virtual(Object key,
+                               List<TodoItem> shownTodos,
+                               int activeCount,
+                               TodoModel model) {
+    return new VDomComponent(key, (component, key, context) {
       if (component == null) {
         return new Main(key, context, shownTodos, activeCount, model);
       }
       component.updateProperties(shownTodos, activeCount);
-    };
+    });
   }
 }

@@ -1,11 +1,8 @@
 part of todomvc;
 
-/// Footer Component.
+/// Footer Component
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-///
-/// It doesn't have any state in React terms, and everything is passed
-/// as properties in Data flow style.
 class Footer extends VComponent {
   // properties
   int activeCount;
@@ -14,9 +11,9 @@ class Footer extends VComponent {
   Function clearCompleted;
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Footer(Object key, Component parent, this.activeCount, this.completedCount,
+  Footer(Object key, Context context, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
-      : super(key, 'footer', parent) {
+      : super(key, 'footer', context) {
     element.id = 'footer';
 
     Zone.ROOT.run(() {
@@ -78,14 +75,14 @@ class Footer extends VComponent {
 
   /// virtual static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static init(int activeCount, int completedCount,
+  static VDomComponent virtual(Object key, int activeCount, int completedCount,
               int showItem, Function clearCompleted) {
-    return (component, key, context) {
+    return new VDomComponent(key, (component, key, context) {
       if (component == null) {
         return new Footer(key, context, activeCount, completedCount,
             showItem, clearCompleted);
       }
       component.updateProperties(activeCount, completedCount, showItem);
-    };
+    });
   }
 }

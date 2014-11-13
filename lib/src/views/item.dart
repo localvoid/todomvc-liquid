@@ -3,8 +3,6 @@ part of todomvc;
 /// TodoItemView Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-///
-/// It is an example of stateful Component.
 class TodoItemView extends VComponent {
   // properties
   String _title;
@@ -26,15 +24,15 @@ class TodoItemView extends VComponent {
   }
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(Object key, Component parent, TodoItem item)
+  TodoItemView(Object key, Context context, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
-        super(key, 'li', parent) {
+        super(key, 'li', context) {
     element.dataset['key'] = key.toString();
   }
 
-  /// Action that changes state, it can be called in any time,
-  /// so we should use `invalidate()` method to mark it dirty.
+  /// Action that changes state, it is called outside of Scheduler execution
+  /// context, so we should use `invalidate()` method to mark it dirty.
   void startEdit() {
     _isEditing = true;
     _editingTitle = _title;
@@ -42,7 +40,7 @@ class TodoItemView extends VComponent {
     // Here is a special case when we need to perform some action
     // after view is rendered. It will be called immediately after
     // read/write phases in UpdateLoop.
-    Scheduler.currentFrame.after().then((_) {
+    Scheduler.nextFrame.after().then((_) {
       if (isAttached) {
         final InputElement e = _input.ref;
         final length = _title.length;
@@ -108,12 +106,12 @@ class TodoItemView extends VComponent {
 
   /// init static function convention explanation in
   /// "lib/src/views/main.dart" file.
-  static init(TodoItem item) {
-    return (component, key, context) {
+  static virtual(Object key, TodoItem item) {
+    return new VDomComponent(key, (component, key, context) {
       if (component == null) {
         return new TodoItemView(key, context, item);
       }
       component.updateProperties(item);
-    };
+    });
   }
 }
