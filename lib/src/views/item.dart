@@ -24,11 +24,11 @@ class TodoItemView extends VComponent {
   }
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(Object key, Context context, TodoItem item)
+  TodoItemView(Context context, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
-        super(key, 'li', context) {
-    element.dataset['key'] = key.toString();
+        super('li', context) {
+    element.dataset['key'] = item.id.toString();
   }
 
   /// Action that changes state, it is called outside of Scheduler execution
@@ -107,9 +107,9 @@ class TodoItemView extends VComponent {
   /// init static function convention explanation in
   /// "lib/src/views/main.dart" file.
   static virtual(Object key, TodoItem item) {
-    return new VDomComponent(key, (component, key, context) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new TodoItemView(key, context, item);
+        return new TodoItemView(context, item);
       }
       component.updateProperties(item);
     });

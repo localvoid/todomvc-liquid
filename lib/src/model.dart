@@ -21,9 +21,6 @@ class TodoItem {
   }
 }
 
-/// This is our poor man's "Flux" architecture :) Just mixed in one object
-/// for simplicity.
-///
 /// Application state:
 /// - [items] list of todo items
 /// - [showItems] which items to display ([showAll], [showActive]
@@ -31,8 +28,6 @@ class TodoItem {
 ///
 /// To listen when the application state is changes, we are using [changes]
 /// stream.
-///
-/// Everyting else is our "Flux" actions.
 class TodoModel {
   static const int showAll = 0;
   static const int showActive = 1;

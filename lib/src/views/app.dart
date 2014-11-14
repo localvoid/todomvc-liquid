@@ -10,9 +10,10 @@ part of todomvc;
 class TodoApp extends VComponent {
   TodoModel _model;
 
-  /// Whenever we create our Components, we need to pass unique [key] and
-  /// [context] in which this [Component] is created. [context] is used to
-  /// determine its depth relative to other contexts.
+  /// When we create our Components, we need to pass [context] in which
+  /// this [Component] is created. [context] is used to determine its depth
+  /// relative to other contexts. To create root-level Component, use `null`
+  /// value for the [context].
   ///
   /// Depth is used in our Scheduler to sort write tasks, so that Components
   /// with the lowest depth have higher priority.
@@ -23,7 +24,7 @@ class TodoApp extends VComponent {
   /// this. Except for DOM read operations, to read from the DOM, we need to
   /// use `readDOM()` method that returns Future, and this Future will be
   /// completed when Scheduler:read phase starts.
-  TodoApp(Object key, Context context, this._model) : super(key, 'div', context);
+  TodoApp(Context context, this._model) : super('div', context);
 
   /// This method is invoked when Component is attached to the DOM, so we can start
   /// to listening for the events from data model.

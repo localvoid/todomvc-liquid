@@ -13,8 +13,8 @@ class Main extends VComponent {
   TodoModel _model;
   List<VDomComponent> _todoItems;
 
-  Main(Object key, Context context, this.shownTodos, this.activeCount, this._model)
-      : super(key, 'section', context) {
+  Main(Context context, this.shownTodos, this.activeCount, this._model)
+      : super('section', context) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';
@@ -174,9 +174,9 @@ class Main extends VComponent {
                                List<TodoItem> shownTodos,
                                int activeCount,
                                TodoModel model) {
-    return new VDomComponent(key, (component, key, context) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new Main(key, context, shownTodos, activeCount, model);
+        return new Main(context, shownTodos, activeCount, model);
       }
       component.updateProperties(shownTodos, activeCount);
     });

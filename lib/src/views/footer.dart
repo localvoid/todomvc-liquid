@@ -11,9 +11,9 @@ class Footer extends VComponent {
   Function clearCompleted;
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Footer(Object key, Context context, this.activeCount, this.completedCount,
+  Footer(Context context, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
-      : super(key, 'footer', context) {
+      : super('footer', context) {
     element.id = 'footer';
 
     Zone.ROOT.run(() {
@@ -77,9 +77,9 @@ class Footer extends VComponent {
   /// "lib/src/views/main.dart" file.
   static VDomComponent virtual(Object key, int activeCount, int completedCount,
               int showItem, Function clearCompleted) {
-    return new VDomComponent(key, (component, key, context) {
+    return new VDomComponent(key, (component, context) {
       if (component == null) {
-        return new Footer(key, context, activeCount, completedCount,
+        return new Footer(context, activeCount, completedCount,
             showItem, clearCompleted);
       }
       component.updateProperties(activeCount, completedCount, showItem);
