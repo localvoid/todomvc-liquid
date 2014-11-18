@@ -32,15 +32,9 @@ class TodoApp extends VComponent {
     super.attached();
     /// Listen to changes from our Data model
     ///
-    /// `attached` method is executed in the Scheduler zone, so if we want to
-    /// execute something outside of the Scheduler zone, like in this example,
-    /// we need to run it in different zone, for example in the ROOT zone.
-    ///
-    /// In this case, when model is changed, we are invalidating this component,
+    /// When model is changed, we are invalidating this component,
     /// and on the next frame Scheduler will update this Component.
-    Zone.ROOT.run(() {
-      _model.changes.listen((_) => invalidate());
-    });
+    _model.changes.listen((_) => invalidate());
   }
 
   /// Here we are building virtual DOM, nothing interesting here.

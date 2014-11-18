@@ -11,11 +11,9 @@ class Header extends VComponent {
   Header(Context context, this._model)
       : super('header', context) {
 
-    Zone.ROOT.run(() {
-      element
-         ..onInput.matches('#new-todo').listen(_handleInput)
-         ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
-    });
+    element
+       ..onInput.matches('#new-todo').listen(_handleInput)
+       ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
   }
 
   void _handleKeyDown(KeyboardEvent e) {

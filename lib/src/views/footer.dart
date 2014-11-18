@@ -16,10 +16,8 @@ class Footer extends VComponent {
       : super('footer', context) {
     element.id = 'footer';
 
-    Zone.ROOT.run(() {
-      // Event listener to clear button using Event delegation
-      element.onClick.matches('#clear-completed').listen((_) { clearCompleted(); });
-    });
+    // Event listener to clear button using Event delegation
+    element.onClick.matches('#clear-completed').listen((_) { clearCompleted(); });
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
