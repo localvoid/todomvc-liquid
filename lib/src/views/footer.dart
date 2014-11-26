@@ -3,7 +3,7 @@ part of todomvc;
 /// Footer Component
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Footer extends VComponent {
+class Footer extends Component {
   // properties
   int activeCount;
   int completedCount;
@@ -13,7 +13,7 @@ class Footer extends VComponent {
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Footer(Context context, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
-      : super('footer', context) {
+      : super(new Element.tag('footer'), context) {
     element.id = 'footer';
 
     // Event listener to clear button using Event delegation
@@ -21,7 +21,7 @@ class Footer extends VComponent {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  v.Element build() {
+  VRootElement build() {
     final activeTodoWord = 'item';
 
     final counter = vdom.span(#counter,
@@ -54,7 +54,7 @@ class Footer extends VComponent {
           attributes: const {'id': 'clear-completed'}));
     }
 
-    return vdom.footer(0, children);
+    return new VRootElement(children);
   }
 
   /// updateProperties method convention explanation in

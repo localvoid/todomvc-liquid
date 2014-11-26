@@ -7,14 +7,14 @@ part of todomvc;
 /// This application is for demonstration purposes, so it isn't written in
 /// a best possible way, like for example in this case I want to demonstrate
 /// how to access children Components from the parent.
-class Main extends VComponent {
+class Main extends Component {
   List<TodoItem> shownTodos;
   int activeCount;
   TodoModel _model;
   List<VDomComponent> _todoItems;
 
   Main(Context context, this.shownTodos, this.activeCount, this._model)
-      : super('section', context) {
+      : super(new Element.tag('section'), context) {
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';
@@ -38,9 +38,9 @@ class Main extends VComponent {
 
   /// Find key value from one of its children elements
   int _findKey(Element e) {
-    // `queryMatchingParent(element, selector)` is a simple helper, that will
-    // search for parent element that matches this selector.
-    final itemElement = queryMatchingParent(e, 'li');
+    // `closest(element, selector)` is a simple helper, that will
+    // search for ancestor that matches this selector.
+    final itemElement = closest(e, 'li');
     final key = int.parse(itemElement.dataset['key']);
     return key;
   }
@@ -117,7 +117,7 @@ class Main extends VComponent {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  v.Element build() {
+  VRootElement build() {
     final activeTodoCount = 0;
     final checkBox = new CheckBox(0,
         checked: activeCount == 0,
@@ -127,7 +127,7 @@ class Main extends VComponent {
     final todoListContainer = vdom.ul(1, _todoItems,
         attributes: const {'id': 'todo-list'});
 
-    return vdom.section(0, [checkBox, todoListContainer]);
+    return new VRootElement([checkBox, todoListContainer]);
   }
 
   /// Update properties and update view if it is changed.

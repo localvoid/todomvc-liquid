@@ -3,13 +3,13 @@ part of todomvc;
 /// Header Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Header extends VComponent {
+class Header extends Component {
   final TodoModel _model;
   String _input = '';
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Header(Context context, this._model)
-      : super('header', context) {
+      : super(new Element.tag('header'), context) {
 
     element
        ..onInput.matches('#new-todo').listen(_handleInput)
@@ -36,8 +36,8 @@ class Header extends VComponent {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  v.Element build() {
-    return vdom.header(0, [vdom.h1(0, [vdom.t('todos')]),
+  VRootElement build() {
+    return new VRootElement([vdom.h1(0, [vdom.t('todos')]),
             new TextInput(1,
               value: _input,
               attributes: const {

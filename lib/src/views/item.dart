@@ -3,7 +3,7 @@ part of todomvc;
 /// TodoItemView Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class TodoItemView extends VComponent {
+class TodoItemView extends Component {
   // properties
   String _title;
   bool _isCompleted;
@@ -27,7 +27,7 @@ class TodoItemView extends VComponent {
   TodoItemView(Context context, TodoItem item)
       : _title = item.title,
         _isCompleted = item.completed,
-        super('li', context) {
+        super(new LIElement(), context) {
     element.dataset['key'] = item.id.toString();
   }
 
@@ -40,7 +40,7 @@ class TodoItemView extends VComponent {
     // Here is a special case when we need to perform some action
     // after view is rendered. It will be called immediately after
     // read/write phases in UpdateLoop.
-    Scheduler.nextFrame.after().then((_) {
+    domScheduler.nextFrame.after().then((_) {
       if (isAttached) {
         final InputElement e = _input.ref;
         final length = _title.length;
@@ -59,7 +59,7 @@ class TodoItemView extends VComponent {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  v.Element build() {
+  VRootElement build() {
     final checkBox = new CheckBox(#toggleButton,
         checked: _isCompleted,
         attributes: const {'class': 'toggle'});
@@ -88,7 +88,7 @@ class TodoItemView extends VComponent {
     if (_isEditing) classes.add('editing');
     if (_isCompleted) classes.add('completed');
 
-    return vdom.li(null, children, classes: classes);
+    return new VRootElement(children, classes: classes);
   }
 
   /// updateProperties method convention explanation in

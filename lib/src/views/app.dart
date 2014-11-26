@@ -1,13 +1,7 @@
 part of todomvc;
 
 /// Top-level Application Component.
-///
-/// There are two types of Components for now:
-/// - [Component] is a pure raw DOM Components
-/// - [VComponent] is a Component that use virtual DOM to render its contents
-///
-/// In this application we will use [VComponent]'s only.
-class TodoApp extends VComponent {
+class TodoApp extends Component<DivElement> {
   TodoModel _model;
 
   /// When we create our Components, we need to pass [context] in which
@@ -24,7 +18,7 @@ class TodoApp extends VComponent {
   /// this. Except for DOM read operations, to read from the DOM, we need to
   /// use `readDOM()` method that returns Future, and this Future will be
   /// completed when Scheduler:read phase starts.
-  TodoApp(Context context, this._model) : super('div', context);
+  TodoApp(Context context, this._model) : super(new DivElement(), context);
 
   /// This method is invoked when Component is attached to the DOM, so we can start
   /// to listening for the events from data model.
@@ -46,7 +40,7 @@ class TodoApp extends VComponent {
   ///
   /// Most of the time this isn't important, but it is quite important to know
   /// when you start writing low-level Components.
-  v.Element build() {
+  VRootElement<DivElement> build() {
     final shownTodos = _model.items.where((i) {
       switch (_model.showItems) {
         case TodoModel.showActive:
@@ -77,7 +71,7 @@ class TodoApp extends VComponent {
                                   _clearCompleted));
     }
 
-    return vdom.div(0, children);
+    return new VRootElement(children);
   }
 
   /// Callback for clear button in Footer component, passed in data-flow style.
