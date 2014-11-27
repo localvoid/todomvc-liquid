@@ -3,7 +3,7 @@ part of todomvc;
 /// Header Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Header extends Component {
+class Header extends Component<Element> {
   final TodoModel _model;
   String _input = '';
 
@@ -46,14 +46,15 @@ class Header extends Component {
               'autofocus': 'true'
             })]);
   }
+}
 
-  /// virtual static function convention explanation in
-  /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, TodoModel model) {
-    return new VDomComponent(key, (component, context) {
-      if (component == null) {
-        return new Header(context, model);
-      }
-    });
+class VHeader extends VComponentBase<Header, Element> {
+  TodoModel model;
+
+  VHeader(Object key, this.model) : super(key);
+
+  void create(Context context) {
+    component = new Header(context, model);
+    ref = component.element;
   }
 }

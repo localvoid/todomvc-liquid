@@ -3,7 +3,7 @@ part of todomvc;
 /// TodoItemView Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class TodoItemView extends Component {
+class TodoItemView extends Component<LIElement> {
   // properties
   String _title;
   bool _isCompleted;
@@ -103,15 +103,20 @@ class TodoItemView extends Component {
     _isCompleted = item.completed;
     update();
   }
+}
 
-  /// init static function convention explanation in
-  /// "lib/src/views/main.dart" file.
-  static virtual(Object key, TodoItem item) {
-    return new VDomComponent(key, (component, context) {
-      if (component == null) {
-        return new TodoItemView(context, item);
-      }
-      component.updateProperties(item);
-    });
+class VTodoItemView extends VComponentBase<TodoItemView, LIElement> {
+  TodoItem item;
+
+  VTodoItemView(Object key, this.item) : super(key);
+
+  void create(Context context) {
+    component = new TodoItemView(context, item);
+    ref = component.element;
+  }
+
+  void update(VTodoItemView other, Context context) {
+    super.update(other, context);
+    component.updateProperties(other.item);
   }
 }

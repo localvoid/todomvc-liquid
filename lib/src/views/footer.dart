@@ -3,7 +3,7 @@ part of todomvc;
 /// Footer Component
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Footer extends Component {
+class Footer extends Component<Element> {
   // properties
   int activeCount;
   int completedCount;
@@ -70,17 +70,27 @@ class Footer extends Component {
     showItem = newShowItem;
     update();
   }
+}
 
-  /// virtual static function convention explanation in
-  /// "lib/src/views/main.dart" file.
-  static VDomComponent virtual(Object key, int activeCount, int completedCount,
-              int showItem, Function clearCompleted) {
-    return new VDomComponent(key, (component, context) {
-      if (component == null) {
-        return new Footer(context, activeCount, completedCount,
-            showItem, clearCompleted);
-      }
-      component.updateProperties(activeCount, completedCount, showItem);
-    });
+class VFooter extends VComponentBase<Footer, Element> {
+  int activeCount;
+  int completedCount;
+  int showItem;
+  Function clearCompleted;
+
+  VFooter(Object key, this.activeCount, this.completedCount,
+      this.showItem, this.clearCompleted) : super(key);
+
+  void create(Context context) {
+    component = new Footer(context, activeCount, completedCount,
+        showItem, clearCompleted);
+    ref = component.element;
+  }
+
+  void update(VFooter other, Context context) {
+    super.update(other, context);
+    component.updateProperties(other.activeCount,
+        other.completedCount,
+        other.showItem);
   }
 }
