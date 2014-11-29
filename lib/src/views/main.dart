@@ -7,14 +7,18 @@ part of todomvc;
 /// This application is for demonstration purposes, so it isn't written in
 /// a best possible way, like for example in this case I want to demonstrate
 /// how to access children Components from the parent.
-class Main extends Component<Element> {
+class Main extends Component {
   List<TodoItem> shownTodos;
   int activeCount;
   TodoModel _model;
   List<VTodoItemView> _todoItems;
 
   Main(Context context, this.shownTodos, this.activeCount, this._model)
-      : super(new Element.tag('section'), context) {
+      : super(context);
+
+  void create() {
+    element = new Element.tag('section');
+
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';

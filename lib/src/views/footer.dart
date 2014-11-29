@@ -3,7 +3,7 @@ part of todomvc;
 /// Footer Component
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Footer extends Component<Element> {
+class Footer extends Component {
   // properties
   int activeCount;
   int completedCount;
@@ -13,8 +13,11 @@ class Footer extends Component<Element> {
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Footer(Context context, this.activeCount, this.completedCount,
       this.showItem, this.clearCompleted)
-      : super(new Element.tag('footer'), context) {
-    element.id = 'footer';
+      : super(context);
+
+  void create() {
+    element = new Element.tag('footer')
+      ..id = 'footer';
 
     // Event listener to clear button using Event delegation
     element.onClick.matches('#clear-completed').listen((_) { clearCompleted(); });

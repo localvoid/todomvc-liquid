@@ -11,20 +11,13 @@ class TodoApp extends Component<DivElement> {
   ///
   /// Depth is used in our Scheduler to sort write tasks, so that Components
   /// with the lowest depth have higher priority.
-  ///
-  /// It is important to understand how Scheduler works, for example
-  /// Component constructors are always executed in Scheduler:write phase,
-  /// so we can do any DOM write operations here, there is nothing wrong with
-  /// this. Except for DOM read operations, to read from the DOM, we need to
-  /// use `readDOM()` method that returns Future, and this Future will be
-  /// completed when Scheduler:read phase starts.
-  TodoApp(Context context, this._model) : super(new DivElement(), context);
+  TodoApp(Context context, this._model) : super(context);
 
   /// This method is invoked when Component is attached to the DOM, so we can start
-  /// to listening for the events from data model.
+  /// to listen events from the data model.
   void attached() {
     super.attached();
-    /// Listen to changes from our Data model
+    /// Listen to changes from the data model
     ///
     /// When model is changed, we are invalidating this component,
     /// and on the next frame Scheduler will update this Component.

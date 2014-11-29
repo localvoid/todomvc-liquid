@@ -3,17 +3,18 @@ part of todomvc;
 /// Header Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-class Header extends Component<Element> {
+class Header extends Component {
   final TodoModel _model;
   String _input = '';
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   Header(Context context, this._model)
-      : super(new Element.tag('header'), context) {
+      : super(context);
 
-    element
-       ..onInput.matches('#new-todo').listen(_handleInput)
-       ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
+  void create() {
+    element = new Element.tag('header')
+      ..onInput.matches('#new-todo').listen(_handleInput)
+      ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
   }
 
   void _handleKeyDown(KeyboardEvent e) {

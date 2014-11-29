@@ -5,6 +5,7 @@ part of todomvc;
 /// Components explanation in "lib/src/views/app.dart" file.
 class TodoItemView extends Component<LIElement> {
   // properties
+  int _id;
   String _title;
   bool _isCompleted;
 
@@ -25,10 +26,15 @@ class TodoItemView extends Component<LIElement> {
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
   TodoItemView(Context context, TodoItem item)
-      : _title = item.title,
-        _isCompleted = item.completed,
-        super(new LIElement(), context) {
-    element.dataset['key'] = item.id.toString();
+      : _id = item.id,
+      _title = item.title,
+      _isCompleted = item.completed,
+      super(context) {
+  }
+
+  void create() {
+    element = new LIElement()
+      ..dataset['key'] = _id.toString();
   }
 
   /// Action that changes state, it is called outside of Scheduler execution
