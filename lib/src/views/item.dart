@@ -4,10 +4,8 @@ part of todomvc;
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
 class TodoItemView extends Component<LIElement> {
-  // properties
-  int _id;
-  String _title;
-  bool _isCompleted;
+  @property
+  TodoItem item;
 
   TextInput _input;
 
@@ -25,23 +23,18 @@ class TodoItemView extends Component<LIElement> {
   }
 
   /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(Context context, TodoItem item)
-      : _id = item.id,
-      _title = item.title,
-      _isCompleted = item.completed,
-      super(context) {
-  }
+  TodoItemView(Context context) : super(context);
 
   void create() {
     element = new LIElement()
-      ..dataset['key'] = _id.toString();
+      ..dataset['key'] = item.id.toString();
   }
 
   /// Action that changes state, it is called outside of Scheduler execution
   /// context, so we should use `invalidate()` method to mark it dirty.
   void startEdit() {
     _isEditing = true;
-    _editingTitle = _title;
+    _editingTitle = item.title;
 
     // Here is a special case when we need to perform some action
     // after view is rendered. It will be called immediately after
@@ -49,7 +42,7 @@ class TodoItemView extends Component<LIElement> {
     domScheduler.nextFrame.after().then((_) {
       if (isAttached) {
         final InputElement e = _input.ref;
-        final length = _title.length;
+        final length = item.title.length;
         e.focus();
         e.setSelectionRange(length, length);
       }
@@ -65,22 +58,19 @@ class TodoItemView extends Component<LIElement> {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  VRootElement build() {
+  VRoot build() {
     final checkBox = new CheckBox(#toggleButton,
-        checked: _isCompleted,
+        checked: item.completed,
         attributes: const {'class': 'toggle'});
 
-    final label = vdom.label(#title, [vdom.t(_title)]);
-    final button = vdom.button(#destroyButton, const [], classes: ['destroy']);
+    final label = vdom.label(#title)(item.title);
+    final button = vdom.button(#destroyButton, classes: ['destroy']);
 
-    final view = vdom.div(#view, [checkBox, label, button], classes: ['view']);
+    final view = vdom.div(#view, classes: ['view'])([checkBox, label, button]);
 
     var children;
 
     if (_isEditing) {
-      // Here we are using Component that supports passing VRefs to virtual
-      // constructors, so it will assign real dom element to it when it is
-      // constructed.
       _input = new TextInput(#input,
           attributes: const {'class': 'edit'},
           value: _editingTitle);
@@ -92,37 +82,10 @@ class TodoItemView extends Component<LIElement> {
 
     final classes = [];
     if (_isEditing) classes.add('editing');
-    if (_isCompleted) classes.add('completed');
+    if (item.completed) classes.add('completed');
 
-    return new VRootElement(children, classes: classes);
-  }
-
-  /// updateProperties method convention explanation in
-  /// "lib/src/views/main.dart" file.
-  void updateProperties(TodoItem item) {
-    if (_title == item.title &&
-        _isCompleted == item.completed) {
-      return;
-    }
-
-    _title = item.title;
-    _isCompleted = item.completed;
-    update();
+    return vRoot(classes: classes)(children);
   }
 }
 
-class VTodoItemView extends VComponentBase<TodoItemView, LIElement> {
-  TodoItem item;
-
-  VTodoItemView(Object key, this.item) : super(key);
-
-  void create(Context context) {
-    component = new TodoItemView(context, item);
-    ref = component.element;
-  }
-
-  void update(VTodoItemView other, Context context) {
-    super.update(other, context);
-    component.updateProperties(other.item);
-  }
-}
+final vTodoItemView = vComponentFactory(TodoItemView);

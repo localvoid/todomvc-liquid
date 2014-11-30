@@ -22,6 +22,6 @@ void main() {
   final model = new TodoModel(); // "lib/src/model.dart"
   initRouter(model);
 
-  final app = new TodoApp(null, model); // "lib/src/views/app.dart"
+  final app = new TodoApp(null)..model = model; // "lib/src/views/app.dart"
   injectComponent(app, querySelector('#todoapp'));
 }

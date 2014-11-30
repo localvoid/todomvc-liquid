@@ -8,13 +8,18 @@ part of todomvc;
 /// a best possible way, like for example in this case I want to demonstrate
 /// how to access children Components from the parent.
 class Main extends Component {
+  @property
   List<TodoItem> shownTodos;
-  int activeCount;
-  TodoModel _model;
-  List<VTodoItemView> _todoItems;
 
-  Main(Context context, this.shownTodos, this.activeCount, this._model)
-      : super(context);
+  @property
+  int activeCount;
+
+  @property
+  TodoModel model;
+
+  List<VComponent> _todoItems;
+
+  Main(Context context) : super(context);
 
   void create() {
     element = new Element.tag('section');
@@ -52,7 +57,7 @@ class Main extends Component {
   /// Toggle all items
   void _toggleAll(Event e) {
     final checked = (e.target as CheckboxInputElement).checked;
-    _model.toggleAll(checked);
+    model.toggleAll(checked);
     e.stopPropagation();
   }
 
@@ -60,14 +65,14 @@ class Main extends Component {
   void _toggleItem(Event e) {
     final key = _findKey(e.target);
     final checked = (e.target as CheckboxInputElement).checked;
-    _model.toggleTodoCompleted(key, checked);
+    model.toggleTodoCompleted(key, checked);
     e.stopPropagation();
   }
 
   /// Remove item
   void _destroyClick(MouseEvent e) {
     final key = _findKey(e.target);
-    _model.removeTodoItem(key);
+    model.removeTodoItem(key);
     e.preventDefault();
     e.stopPropagation();
   }
@@ -82,7 +87,7 @@ class Main extends Component {
       // It is useful when Components are stateful, like in this example.
       final c = findByKey(key);
       if (c.isEditing) {
-        _model.updateTodoTitle(key, c.editingTitle);
+        model.updateTodoTitle(key, c.editingTitle);
         c.stopEdit();
       }
       e.stopPropagation();
@@ -95,7 +100,7 @@ class Main extends Component {
       final key = _findKey(e.target);
       final c = findByKey(key);
       if (e.keyCode == KeyCode.ENTER){
-        _model.updateTodoTitle(key, c.editingTitle);
+        model.updateTodoTitle(key, c.editingTitle);
       }
       c.stopEdit();
       e.stopPropagation();
@@ -121,46 +126,17 @@ class Main extends Component {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  VRootElement build() {
+  VRoot build() {
     final activeTodoCount = 0;
     final checkBox = new CheckBox(0,
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
-    _todoItems = shownTodos.map((i) => new VTodoItemView(i.id, i)).toList();
-    final todoListContainer = vdom.ul(1, _todoItems,
-        attributes: const {'id': 'todo-list'});
+    _todoItems = shownTodos.map((i) => vTodoItemView(i.id, {#item: i})).toList();
+    final todoListContainer = vdom.ul(1, attributes: const {'id': 'todo-list'})(_todoItems);
 
-    return new VRootElement([checkBox, todoListContainer]);
-  }
-
-  /// Update properties and update view if it is changed.
-  ///
-  /// It is not necessary to create such method, it is just a convention.
-  ///
-  /// This method should be called only from Scheduler:write phase, so we
-  /// can check if properties are changed and update view if necessary.
-  void updateProperties(List<TodoItem> newShownTodos, int newActiveCount) {
-    shownTodos = newShownTodos;
-    activeCount = newActiveCount;
-    update();
+    return vRoot()([checkBox, todoListContainer]);
   }
 }
 
-class VMain extends VComponentBase<Main, Element> {
-  List<TodoItem> shownTodos;
-  int activeCount;
-  TodoModel model;
-
-  VMain(Object key, this.shownTodos, this.activeCount, this.model) : super(key);
-
-  void create(Context context) {
-    component = new Main(context, shownTodos, activeCount, model);
-    ref = component.element;
-  }
-
-  void update(VMain other, Context context) {
-    super.update(other, context);
-    component.updateProperties(other.shownTodos, other.activeCount);
-  }
-}
+final vMain = vComponentFactory(Main);
