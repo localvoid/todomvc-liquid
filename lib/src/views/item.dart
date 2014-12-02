@@ -63,12 +63,12 @@ class TodoItemView extends Component<LIElement> {
     final label = vdom.label()(item.title);
     final button = vdom.button(classes: ['destroy']);
 
-    final view = vdom.div(key: #view, classes: ['view'])([checkBox, label, button]);
+    final view = vdom.div(classes: ['view'])([checkBox, label, button]);
 
     var children;
 
     if (_isEditing) {
-      _input = vTextInput(key: #input,
+      _input = vTextInput(
           attributes: const {'class': 'edit'},
           value: _editingTitle);
 

@@ -128,7 +128,7 @@ class Main extends Component {
         attributes: const {'id': 'toggle-all'});
 
     _todoItems = shownTodos.map((i) => vTodoItemView(key: i.id, item: i)).toList();
-    final todoListContainer = vdom.ul(attributes: const {'id': 'todo-list'})(_todoItems);
+    final todoListContainer = vdom.ul(id: 'todo-list')(_todoItems);
 
     return vRoot()([checkBox, todoListContainer]);
   }

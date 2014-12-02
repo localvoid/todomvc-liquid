@@ -22,30 +22,21 @@ class Footer extends Component {
   VRoot build() {
     final activeTodoWord = 'item';
 
-    final allFilter = vdom.li()(
-        vdom.a(attributes: {'href': '#/'},
-               classes: showItem == TodoModel.showAll ? ['selected'] : null)('All')
-    );
-
-    final activeFilter = vdom.li()(
-        vdom.a(attributes: {'href': '#/active'},
-               classes: showItem == TodoModel.showActive ? ['selected'] : null)('Active')
-    );
-
-    final completedFilter = vdom.li()(
-        vdom.a(attributes: {'href': '#/completed'},
-               classes: showItem == TodoModel.showCompleted ? ['selected'] : null)('Completed')
-    );
-
-    final filters = vdom.ul(key: #filters, attributes: {'id': 'filters'})([
-        allFilter,
+    final filters = vdom.ul(attributes: {'id': 'filters'})([
+        vdom.li()(
+          vdom.a(attributes: {'href': '#/'},
+                classes: showItem == TodoModel.showAll ? ['selected'] : null)('All')),
         vdom.text(' '),
-        activeFilter,
+        vdom.li()(
+          vdom.a(attributes: {'href': '#/active'},
+                 classes: showItem == TodoModel.showActive ? ['selected'] : null)('Active')),
         vdom.text(' '),
-        completedFilter
+        vdom.li()(
+          vdom.a(attributes: {'href': '#/completed'},
+                 classes: showItem == TodoModel.showCompleted ? ['selected'] : null)('Completed'))
     ]);
 
-    final counter = vdom.span(key: #counter, attributes: const {'id': 'todo-count'})([
+    final counter = vdom.span(id: 'todo-count')([
         vdom.strong()('$activeCount'),
         vdom.text(' ${pluralize(activeCount, 'item')} left')
     ]);
@@ -53,9 +44,7 @@ class Footer extends Component {
     final children = [counter, filters];
     if (completedCount > 0) {
       children.add(
-          vdom.button(key: #clearButton, attributes: const {'id': 'clear-completed'})(
-              'Clear completed ($completedCount)'
-          )
+          vdom.button(id: 'clear-completed')('Clear completed ($completedCount)')
       );
     }
 
