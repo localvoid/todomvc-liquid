@@ -1,21 +1,11 @@
 part of todomvc;
 
 /// Top-level Application Component.
-class TodoApp extends Component<DivElement> {
-  @property
-  TodoModel model;
+class TodoApp extends Component {
+  @property TodoModel model;
 
-  /// When we create our Components, we need to pass [context] in which
-  /// this [Component] is created. [context] is used to determine its depth
-  /// relative to other contexts. To create root-level Component, use `null`
-  /// value for the [context].
-  ///
-  /// Depth is used in our Scheduler to sort write tasks, so that Components
-  /// with the lowest depth have higher priority.
-  TodoApp(Context context) : super(context);
-
-  /// This method is invoked when Component is attached to the DOM, so we can start
-  /// to listen events from the data model.
+  /// This method is invoked when Component is attached to the document,
+  /// so we can start to listen events from the data model.
   void attached() {
     super.attached();
     /// Listen to changes from the data model
@@ -26,7 +16,7 @@ class TodoApp extends Component<DivElement> {
   }
 
   /// Here we are building virtual DOM to update real DOM.
-  VRoot<DivElement> build() {
+  build() {
     final shownTodos = model.items.where((i) {
       switch (model.showItems) {
         case TodoModel.showActive:
@@ -44,20 +34,20 @@ class TodoApp extends Component<DivElement> {
 
     final completedCount = model.items.length - activeCount;
 
-    final children = [vHeader(#header, {#model: model})];
+    final children = [vHeader(key: #header, model: model)];
 
     if (shownTodos.isNotEmpty) {
-      children.add(vMain(#main, {
-        #shownTodos: shownTodos,
-        #activeCount: activeCount,
-        #model: model}));
+      children.add(vMain(key:         #main,
+                         shownTodos:  shownTodos,
+                         activeCount: activeCount,
+                         model:       model));
     }
     if (activeCount > 0 || completedCount > 0) {
-      children.add(vFooter(#footer, {
-        #activeCount: activeCount,
-        #completedCount: completedCount,
-        #showItem: model.showItems,
-        #clearCompleted: _clearCompleted}));
+      children.add(vFooter(key:            #footer,
+                           activeCount:    activeCount,
+                           completedCount: completedCount,
+                           showItem:       model.showItems,
+                           clearCompleted: _clearCompleted));
     }
 
     return vRoot()(children);

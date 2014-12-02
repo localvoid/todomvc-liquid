@@ -1,5 +1,8 @@
 part of todomvc;
 
+/// Creates a factory method for [Main] Component Virtual Dom Nodes
+final vMain = vComponentFactory(Main);
+
 /// Main Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
@@ -8,18 +11,11 @@ part of todomvc;
 /// a best possible way, like for example in this case I want to demonstrate
 /// how to access children Components from the parent.
 class Main extends Component {
-  @property
-  List<TodoItem> shownTodos;
-
-  @property
-  int activeCount;
-
-  @property
-  TodoModel model;
+  @property List<TodoItem> shownTodos;
+  @property int activeCount;
+  @property TodoModel model;
 
   List<VComponent> _todoItems;
-
-  Main(Context context) : super(context);
 
   void create() {
     element = new Element.tag('section');
@@ -127,16 +123,13 @@ class Main extends Component {
 
   /// build method explanation in "lib/src/views/app.dart" file.
   VRoot build() {
-    final activeTodoCount = 0;
-    final checkBox = new CheckBox(0,
+    final checkBox = vCheckbox(
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
-    _todoItems = shownTodos.map((i) => vTodoItemView(i.id, {#item: i})).toList();
-    final todoListContainer = vdom.ul(1, attributes: const {'id': 'todo-list'})(_todoItems);
+    _todoItems = shownTodos.map((i) => vTodoItemView(key: i.id, item: i)).toList();
+    final todoListContainer = vdom.ul(attributes: const {'id': 'todo-list'})(_todoItems);
 
     return vRoot()([checkBox, todoListContainer]);
   }
 }
-
-final vMain = vComponentFactory(Main);

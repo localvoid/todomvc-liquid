@@ -3,11 +3,11 @@ part of todomvc;
 /// TodoItemView Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
+final vTodoItemView = vComponentFactory(TodoItemView);
 class TodoItemView extends Component<LIElement> {
-  @property
-  TodoItem item;
+  @property TodoItem item;
 
-  TextInput _input;
+  VTextInput _input;
 
   // state
   bool _isEditing = false;
@@ -21,9 +21,6 @@ class TodoItemView extends Component<LIElement> {
       invalidate();
     }
   }
-
-  /// Components constructor explanation in "lib/src/views/app.dart" file.
-  TodoItemView(Context context) : super(context);
 
   void create() {
     element = new LIElement()
@@ -59,19 +56,19 @@ class TodoItemView extends Component<LIElement> {
 
   /// build method explanation in "lib/src/views/app.dart" file.
   VRoot build() {
-    final checkBox = new CheckBox(#toggleButton,
+    final checkBox = vCheckbox(
         checked: item.completed,
         attributes: const {'class': 'toggle'});
 
-    final label = vdom.label(#title)(item.title);
-    final button = vdom.button(#destroyButton, classes: ['destroy']);
+    final label = vdom.label()(item.title);
+    final button = vdom.button(classes: ['destroy']);
 
-    final view = vdom.div(#view, classes: ['view'])([checkBox, label, button]);
+    final view = vdom.div(key: #view, classes: ['view'])([checkBox, label, button]);
 
     var children;
 
     if (_isEditing) {
-      _input = new TextInput(#input,
+      _input = vTextInput(key: #input,
           attributes: const {'class': 'edit'},
           value: _editingTitle);
 
@@ -87,5 +84,3 @@ class TodoItemView extends Component<LIElement> {
     return vRoot(classes: classes)(children);
   }
 }
-
-final vTodoItemView = vComponentFactory(TodoItemView);

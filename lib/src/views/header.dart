@@ -3,13 +3,10 @@ part of todomvc;
 /// Header Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
+final vHeader = vComponentFactory(Header);
 class Header extends Component {
-  @property
-  TodoModel model;
+  @property TodoModel model;
   String _input = '';
-
-  /// Components constructor explanation in "lib/src/views/app.dart" file.
-  Header(Context context) : super(context);
 
   void create() {
     element = new Element.tag('header')
@@ -39,8 +36,8 @@ class Header extends Component {
   /// build method explanation in "lib/src/views/app.dart" file.
   VRoot build() {
     return vRoot()([
-        vdom.h1(0)('todos'),
-        new TextInput(1,
+        vdom.h1()('todos'),
+        vTextInput(
             value: _input,
             attributes: const {
               'id': 'new-todo',
@@ -51,5 +48,3 @@ class Header extends Component {
     ]);
   }
 }
-
-final vHeader = vComponentFactory(Header);
