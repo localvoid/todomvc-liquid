@@ -47,7 +47,7 @@ class TodoApp extends Component {
                            clearCompleted: _clearCompleted));
     }
 
-    return vRoot()(children);
+    return v.root()(children);
   }
 
   /// Callback for clear button in Footer component, passed in data-flow style.

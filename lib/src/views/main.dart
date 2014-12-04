@@ -1,7 +1,7 @@
 part of todomvc;
 
 /// Creates a factory method for [Main] Component Virtual Dom Nodes
-final vMain = vComponentFactory(Main);
+final vMain = v.componentFactory(Main);
 
 /// Main Component.
 ///
@@ -15,7 +15,7 @@ class Main extends Component {
   @property int activeCount;
   @property TodoModel model;
 
-  List<VComponent> _todoItems;
+  List<v.VComponent> _todoItems;
 
   void create() {
     element = new Element.tag('section');
@@ -123,14 +123,14 @@ class Main extends Component {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  VRoot build() {
-    final checkBox = vCheckbox(
+  build() {
+    final checkBox = v.checkbox(
         checked: activeCount == 0,
         attributes: const {'id': 'toggle-all'});
 
     _todoItems = shownTodos.map((i) => vTodoItemView(key: i.id, item: i)).toList();
-    final todoListContainer = vUl(id: 'todo-list')(_todoItems);
+    final todoListContainer = v.ul(id: 'todo-list')(_todoItems);
 
-    return vRoot()([checkBox, todoListContainer]);
+    return v.root()([checkBox, todoListContainer]);
   }
 }

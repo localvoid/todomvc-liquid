@@ -3,7 +3,7 @@ library todomvc;
 import 'dart:async';
 import 'dart:html';
 import 'package:liquid/liquid.dart';
-import 'package:liquid/forms.dart';
+import 'package:liquid/vdom.dart' as v;
 
 part 'package:todomvc_liquid/src/utils.dart';
 part 'package:todomvc_liquid/src/model.dart';

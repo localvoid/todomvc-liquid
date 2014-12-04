@@ -3,7 +3,7 @@ part of todomvc;
 /// Header Component.
 ///
 /// Components explanation in "lib/src/views/app.dart" file.
-final vHeader = vComponentFactory(Header);
+final vHeader = v.componentFactory(Header);
 class Header extends Component {
   @immutable TodoModel model;
   String _input = '';
@@ -36,10 +36,10 @@ class Header extends Component {
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  VRoot build() {
-    return vRoot()([
-        vH1()('todos'),
-        vTextInput(
+  build() {
+    return v.root()([
+        v.h1()('todos'),
+        v.textInput(
             value: _input,
             attributes: const {
               'id': 'new-todo',
