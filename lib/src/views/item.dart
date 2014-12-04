@@ -60,10 +60,10 @@ class TodoItemView extends Component<LIElement> {
         checked: item.completed,
         attributes: const {'class': 'toggle'});
 
-    final label = vdom.label()(item.title);
-    final button = vdom.button(classes: ['destroy']);
+    final label = vLabel()(item.title);
+    final button = vButton(classes: ['destroy']);
 
-    final view = vdom.div(classes: ['view'])([checkBox, label, button]);
+    final view = vDiv(classes: ['view'])([checkBox, label, button]);
 
     var children;
 

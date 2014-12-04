@@ -4,10 +4,7 @@ part of todomvc;
 class TodoApp extends Component {
   @property TodoModel model;
 
-  /// This method is invoked when Component is attached to the document,
-  /// so we can start to listen events from the data model.
-  void attached() {
-    super.attached();
+  void init() {
     /// Listen to changes from the data model
     ///
     /// When model is changed, we are invalidating this component,

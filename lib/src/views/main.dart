@@ -19,11 +19,12 @@ class Main extends Component {
 
   void create() {
     element = new Element.tag('section');
-
     // Here we are assigning id directly, because it will never change
     // in build() method. So it is just a matter of preference
     element.id = 'main';
+  }
 
+  void init() {
     // Registering event callbacks
     element
         ..onKeyDown.matches('.edit').listen(_editKeyDown)
@@ -128,7 +129,7 @@ class Main extends Component {
         attributes: const {'id': 'toggle-all'});
 
     _todoItems = shownTodos.map((i) => vTodoItemView(key: i.id, item: i)).toList();
-    final todoListContainer = vdom.ul(id: 'todo-list')(_todoItems);
+    final todoListContainer = vUl(id: 'todo-list')(_todoItems);
 
     return vRoot()([checkBox, todoListContainer]);
   }

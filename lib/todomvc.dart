@@ -2,8 +2,6 @@ library todomvc;
 
 import 'dart:async';
 import 'dart:html';
-import 'package:vdom/vdom.dart' as v;
-import 'package:vdom/helpers.dart' as vdom;
 import 'package:liquid/liquid.dart';
 import 'package:liquid/forms.dart';
 

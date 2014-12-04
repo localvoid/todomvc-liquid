@@ -13,7 +13,9 @@ class Footer extends Component {
   void create() {
     element = new Element.tag('footer')
       ..id = 'footer';
+  }
 
+  void init() {
     // Event listener to clear button using Event delegation
     element.onClick.matches('#clear-completed').listen((_) { clearCompleted(); });
   }
@@ -21,30 +23,31 @@ class Footer extends Component {
   /// build method explanation in "lib/src/views/app.dart" file.
   VRoot build() {
     final activeTodoWord = 'item';
+    const selected = const ['selected'];
 
-    final filters = vdom.ul(attributes: {'id': 'filters'})([
-        vdom.li()(
-          vdom.a(attributes: {'href': '#/'},
-                classes: showItem == TodoModel.showAll ? ['selected'] : null)('All')),
-        vdom.text(' '),
-        vdom.li()(
-          vdom.a(attributes: {'href': '#/active'},
-                 classes: showItem == TodoModel.showActive ? ['selected'] : null)('Active')),
-        vdom.text(' '),
-        vdom.li()(
-          vdom.a(attributes: {'href': '#/completed'},
-                 classes: showItem == TodoModel.showCompleted ? ['selected'] : null)('Completed'))
+    final filters = vUl(attributes: {'id': 'filters'})([
+        vLi()(
+          vA(attributes: {'href': '#/'},
+             classes: showItem == TodoModel.showAll ? selected : null)('All')),
+        vText(' '),
+        vLi()(
+          vA(attributes: {'href': '#/active'},
+             classes: showItem == TodoModel.showActive ? selected : null)('Active')),
+        vText(' '),
+        vLi()(
+          vA(attributes: {'href': '#/completed'},
+             classes: showItem == TodoModel.showCompleted ? selected : null)('Completed'))
     ]);
 
-    final counter = vdom.span(id: 'todo-count')([
-        vdom.strong()('$activeCount'),
-        vdom.text(' ${pluralize(activeCount, 'item')} left')
+    final counter = vSpan(id: 'todo-count')([
+        vStrong()('$activeCount'),
+        vText(' ${pluralize(activeCount, 'item')} left')
     ]);
 
     final children = [counter, filters];
     if (completedCount > 0) {
       children.add(
-          vdom.button(id: 'clear-completed')('Clear completed ($completedCount)')
+          vButton(id: 'clear-completed')('Clear completed ($completedCount)')
       );
     }
 
