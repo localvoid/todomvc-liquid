@@ -16,8 +16,9 @@ class Footer extends Component {
   }
 
   void init() {
-    // Event listener to clear button using Event delegation
-    element.onClick.matches('#clear-completed').listen((_) { clearCompleted(); });
+    element.onClick
+      .matches('#clear-completed')
+      .listen((_) { clearCompleted(); });
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
@@ -25,7 +26,7 @@ class Footer extends Component {
     final activeTodoWord = 'item';
     const selected = const ['selected'];
 
-    final filters = v.ul(attributes: {'id': 'filters'})([
+    final filters = v.ul(id: 'filters')([
         v.li()(
           v.a(attributes: {'href': '#/'},
              classes: showItem == TodoModel.showAll ? selected : null)('All')),

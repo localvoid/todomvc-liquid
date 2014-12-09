@@ -1,6 +1,6 @@
 part of todomvc;
 
-/// Creates a factory method for [Main] Component Virtual Dom Nodes
+/// Creates a factory method for [Main] Component Virtual Dom Nodes.
 final vMain = v.componentFactory(Main);
 
 /// Main Component.
@@ -8,14 +8,14 @@ final vMain = v.componentFactory(Main);
 /// Components explanation in "lib/src/views/app.dart" file.
 ///
 /// This application is for demonstration purposes, so it isn't written in
-/// a best possible way, like for example in this case I want to demonstrate
+/// the best possible way, like for example in this case I want to show
 /// how to access children Components from the parent.
-class Main extends Component {
+class Main extends Component<Element> {
   @property List<TodoItem> shownTodos;
   @property int activeCount;
   @property TodoModel model;
 
-  List<v.VComponent> _todoItems;
+  List<v.VComponentBase> _todoItems;
 
   void create() {
     element = new Element.tag('section');
@@ -27,28 +27,98 @@ class Main extends Component {
   void init() {
     // Registering event callbacks
     element
-        ..onKeyDown.matches('.edit').listen(_editKeyDown)
-        ..onInput.matches('.edit').listen(_editInput)
-        ..onDoubleClick.matches('label').listen(_labelDoubleClick)
-        ..onClick.matches('.destroy').listen(_destroyClick)
-        ..onBlur.capture(_handleBlur); // blur doesn't propagate
+      ..onKeyDown.matches('.edit')
+        .where((e) => e.keyCode == KeyCode.ENTER ||
+                      e.keyCode == KeyCode.ESC)
+        .map(_extractKey)
+        .listen(_itemKeyDown)
+
+      ..onInput.matches('.edit')
+        .map(_extractKey)
+        .listen(_itemInput)
+
+      ..onDoubleClick.matches('label')
+        .map(_extractKey)
+        .listen(_itemStartEdit)
+
+      ..onClick.matches('.destroy')
+        .map(_extractKey)
+        .listen(_itemRemove);
 
     element.onChange
-        ..matches('.toggle').listen(_toggleItem)
-        ..matches('#toggle-all').listen(_toggleAll);
+      ..matches('.toggle')
+        .map(_extractKey)
+        .listen(_itemToggle)
+
+      ..matches('#toggle-all')
+        .listen(_toggleAll);
+
+    element
+      ..onBlur.capture(_handleBlur); // blur doesn't propagate
+
   }
 
-  TodoItemView findByKey(Object key) {
+  /// Extract key value from ancestor
+  Tuple2 _extractKey(Event e) =>
+      new Tuple2(e, int.parse(closest(e.target, 'li').dataset['key']));
+
+  TodoItemView _findComponentByKey(Object key) {
     return _todoItems.firstWhere((i) => i.key == key).component;
   }
 
-  /// Find key value from one of its children elements
-  int _findKey(Element e) {
-    // `closest(element, selector)` is a simple helper, that will
-    // search for ancestor that matches this selector.
-    final itemElement = closest(e, 'li');
-    final key = int.parse(itemElement.dataset['key']);
-    return key;
+  /// Cancel or update on esc/enter
+  void _itemKeyDown(Tuple2<KeyboardEvent, int> data) {
+    final event = data.i1;
+    final key = data.i2;
+    final component = _findComponentByKey(key);
+    if (event.keyCode == KeyCode.ENTER){
+      model.updateTodoTitle(key, component.editingTitle);
+    }
+    component.editing = false;
+    component.editingTitle = null;
+    component.invalidate();
+    event.stopPropagation();
+  }
+
+  /// Update input
+  void _itemInput(Tuple2<KeyboardEvent, int> data) {
+    final event = data.i1;
+    final key = data.i2;
+    final newTitle = (event.target as InputElement).value;
+    final component = _findComponentByKey(key);
+    component.editingTitle = newTitle;
+    event.stopPropagation();
+  }
+
+  /// Edit item
+  void _itemStartEdit(Tuple2<MouseEvent, int> data) {
+    final event = data.i1;
+    final key = data.i2;
+    final component = _findComponentByKey(key);
+    component.editing = true;
+    component.editingTitle = component.item.title;
+    component.focus();
+    component.invalidate();
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  /// Remove item
+  void _itemRemove(Tuple2<KeyboardEvent, int> data) {
+    final event = data.i1;
+    final key = data.i2;
+    model.removeTodoItem(key);
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  /// Togle one item
+  void _itemToggle(Tuple2<Event, int> data) {
+    final event = data.i1;
+    final key = data.i2;
+    final checked = (event.target as CheckboxInputElement).checked;
+    model.toggleTodoCompleted(key, checked);
+    event.stopPropagation();
   }
 
   /// Toggle all items
@@ -58,79 +128,27 @@ class Main extends Component {
     e.stopPropagation();
   }
 
-  /// Togle one item
-  void _toggleItem(Event e) {
-    final key = _findKey(e.target);
-    final checked = (e.target as CheckboxInputElement).checked;
-    model.toggleTodoCompleted(key, checked);
-    e.stopPropagation();
-  }
-
-  /// Remove item
-  void _destroyClick(MouseEvent e) {
-    final key = _findKey(e.target);
-    model.removeTodoItem(key);
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
   void _handleBlur(FocusEvent e) {
     if ((e.target as Element).matches('.edit')) {
-      final key = _findKey(e.target);
-
-      // Here we are using `findByKey` method that will return child component
-      // with this key.
-      //
-      // It is useful when Components are stateful, like in this example.
-      final c = findByKey(key);
-      if (c.isEditing) {
+      final key = _extractKey(e).i2;
+      final c = _findComponentByKey(key);
+      if (c.editing) {
         model.updateTodoTitle(key, c.editingTitle);
-        c.stopEdit();
+        c.editing = false;
+        c.editingTitle = null;
+        c.invalidate();
       }
       e.stopPropagation();
     }
-  }
-
-  /// Cancel or update on esc/enter
-  void _editKeyDown(KeyboardEvent e) {
-    if (e.keyCode == KeyCode.ENTER || e.keyCode == KeyCode.ESC) {
-      final key = _findKey(e.target);
-      final c = findByKey(key);
-      if (e.keyCode == KeyCode.ENTER){
-        model.updateTodoTitle(key, c.editingTitle);
-      }
-      c.stopEdit();
-      e.stopPropagation();
-    }
-  }
-
-  /// Update input
-  void _editInput(Event e) {
-    final key = _findKey(e.target);
-    final newTitle = (e.target as InputElement).value;
-    final c = findByKey(key);
-    c.editingTitle = newTitle;
-    e.stopPropagation();
-  }
-
-  /// Edit item
-  void _labelDoubleClick(MouseEvent e) {
-    final key = _findKey(e.target);
-    final c = findByKey(key);
-    c.startEdit();
-    e.preventDefault();
-    e.stopPropagation();
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
   build() {
-    final checkBox = v.checkbox(
-        checked: activeCount == 0,
-        attributes: const {'id': 'toggle-all'});
-
     _todoItems = shownTodos.map((i) => vTodoItemView(key: i.id, item: i)).toList();
-    final todoListContainer = v.ul(id: 'todo-list')(_todoItems);
 
-    return v.root()([checkBox, todoListContainer]);
+    return v.root()([
+        v.checkbox(id: 'toggle-all', checked: activeCount == 0),
+        v.ul(id: 'todo-list')(_todoItems)
+    ]);
   }
 }

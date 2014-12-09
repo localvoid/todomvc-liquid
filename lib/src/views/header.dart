@@ -5,48 +5,50 @@ part of todomvc;
 /// Components explanation in "lib/src/views/app.dart" file.
 final vHeader = v.componentFactory(Header);
 class Header extends Component {
-  @immutable TodoModel model;
+  @property TodoModel model;
+
   String _input = '';
 
   void create() { element = new Element.tag('header'); }
 
   void init() {
     element
-      ..onInput.matches('#new-todo').listen(_handleInput)
-      ..onKeyDown.matches('#new-todo').listen(_handleKeyDown);
+      ..onKeyDown
+        .matches('#new-todo')
+        .where((e) => e.keyCode == KeyCode.ENTER)
+        .listen(_submit)
+
+      ..onInput
+        .matches('#new-todo')
+        .listen(_updateInput);
   }
 
-  void _handleKeyDown(KeyboardEvent e) {
-    if (e.keyCode == KeyCode.ENTER) {
-      final title = _input.trim();
-      if (title.isNotEmpty) {
-        model.addTodo(title);
-      }
-      _input = '';
-      invalidate();
-      e.stopPropagation();
-      e.preventDefault();
+  void _submit(KeyboardEvent e) {
+    final title = _input.trim();
+    if (title.isNotEmpty) {
+      model.addTodo(title);
     }
+    _input = '';
+    invalidate();
+    e.stopPropagation();
+    e.preventDefault();
   }
 
-  void _handleInput(Event e) {
-    if ((e.target as Element).matches('#new-todo')) {
-      _input = (e.target as InputElement).value;
-    }
+  void _updateInput(Event e) {
+    _input = (e.target as InputElement).value;
   }
 
   /// build method explanation in "lib/src/views/app.dart" file.
-  build() {
-    return v.root()([
+  build() =>
+    v.root()([
         v.h1()('todos'),
         v.textInput(
+            id: 'new-todo',
             value: _input,
             attributes: const {
-              'id': 'new-todo',
               'placeholder': 'What needs to be done',
               'autofocus': 'true'
             }
         )
     ]);
-  }
 }
