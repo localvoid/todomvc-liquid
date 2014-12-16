@@ -11,11 +11,11 @@ final vMain = v.componentFactory(Main);
 /// the best possible way, like for example in this case I want to show
 /// how to access children Components from the parent.
 class Main extends Component<Element> {
-  @property List<TodoItem> shownTodos;
-  @property int activeCount;
-  @property TodoModel model;
+  @property() List<TodoItem> shownTodos;
+  @property() int activeCount;
+  @property() TodoModel model;
 
-  List<v.VComponentBase> _todoItems;
+  List<v.VComponent> _todoItems;
 
   void create() {
     element = new Element.tag('section');

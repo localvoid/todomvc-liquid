@@ -5,7 +5,7 @@ part of todomvc;
 /// Components explanation in "lib/src/views/app.dart" file.
 final vHeader = v.componentFactory(Header);
 class Header extends Component {
-  @property TodoModel model;
+  @property() TodoModel model;
 
   String _input = '';
 

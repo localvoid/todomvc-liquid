@@ -5,10 +5,10 @@ part of todomvc;
 /// Components explanation in "lib/src/views/app.dart" file.
 final vFooter = v.componentFactory(Footer);
 class Footer extends Component {
-  @property int activeCount;
-  @property int completedCount;
-  @property int showItem;
-  @property Function clearCompleted;
+  @property() int activeCount;
+  @property() int completedCount;
+  @property() int showItem;
+  @property() Function clearCompleted;
 
   void create() {
     element = new Element.tag('footer')
@@ -28,15 +28,15 @@ class Footer extends Component {
 
     final filters = v.ul(id: 'filters')([
         v.li()(
-          v.a(attributes: {'href': '#/'},
+          v.link(href: '#/',
              classes: showItem == TodoModel.showAll ? selected : null)('All')),
         v.text(' '),
         v.li()(
-          v.a(attributes: {'href': '#/active'},
+          v.link(href: '#/active',
              classes: showItem == TodoModel.showActive ? selected : null)('Active')),
         v.text(' '),
         v.li()(
-          v.a(attributes: {'href': '#/completed'},
+          v.link(href: '#/completed',
              classes: showItem == TodoModel.showCompleted ? selected : null)('Completed'))
     ]);
 

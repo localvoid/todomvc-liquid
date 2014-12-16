@@ -5,7 +5,7 @@ part of todomvc;
 /// Components explanation in "lib/src/views/app.dart" file.
 final vTodoItemView = v.componentFactory(TodoItemView);
 class TodoItemView extends Component {
-  @property TodoItem item;
+  @property() TodoItem item;
 
   bool editing = false;
   String editingTitle;

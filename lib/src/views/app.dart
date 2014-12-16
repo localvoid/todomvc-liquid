@@ -2,7 +2,7 @@ part of todomvc;
 
 /// Top-level Application Component.
 class TodoApp extends Component {
-  @property TodoModel model;
+  @property() TodoModel model;
 
   void init() {
     /// Listen to changes from the data model
