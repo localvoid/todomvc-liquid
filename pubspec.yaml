@@ -2,8 +2,8 @@ name: todomvc_liquid
 description: TodoMVC example
 dependencies:
   browser: any
-  liquid:
-    git: git://github.com/localvoid/liquid.git
-  vdom:
-    git: git://github.com/localvoid/vdom.git
+  liquid: '>=0.3.0'
+  tuple: any
   route_hierarchical: any
+transformers:
+- liquid
